@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  --bg: #eef2f7;
+  --grid-line: #d7dfea;
+  --panel: #ffffff;
+  --border: #dfe4ec;
+  --text: #1c2733;
+  --text-dim: #6b7684;
+  --blueprint: #2c4a7c;
+  --blueprint-dark: #1d3457;
+  --brass: #b8862f;
+  --error: #c0392b;
+  --error-bg: #fdecea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  position: relative;
+}
+
+.grid-backdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.6;
+  mask-image: radial-gradient(circle at 50% 30%, black 10%, transparent 75%);
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2.25rem;
+  box-shadow: 0 1px 2px rgba(28, 39, 51, 0.04), 0 12px 32px rgba(28, 39, 51, 0.06);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.header-mark {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--blueprint);
+  color: #fff;
+  font-size: 1.3rem;
+}
+
+.card-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+  color: var(--blueprint-dark);
+}
+
+.card-header p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field-hint {
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.field input,
+.field select {
+  background: #fafbfd;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.6rem 0.7rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--blueprint);
+  box-shadow: 0 0 0 3px rgba(44, 74, 124, 0.12);
+}
+
+.field select {
+  cursor: pointer;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+button {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--blueprint);
+  background: var(--blueprint);
+  color: #fff;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--blueprint-dark);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-dim);
+}
+
+button.secondary:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.error-box {
+  margin-top: 1.4rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  color: var(--error);
+  font-size: 0.85rem;
+  background: var(--error-bg);
+}
+
+.result-box {
+  margin-top: 1.4rem;
+  padding: 1.25rem 1.4rem;
+  border: 1px dashed var(--brass);
+  border-radius: 10px;
+  background: #fdf8ee;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.result-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--brass);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.result-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--blueprint-dark);
+}
+
+.result-note {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.explain-box {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.explain-box h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem;
+  color: var(--blueprint-dark);
+}
+
+.explain-sub {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.explain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.explain-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+  gap: 0.75rem;
+}
+
+.explain-label {
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.explain-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.explain-amount.up {
+  color: #1a8a52;
+}
+
+.explain-amount.down {
+  color: var(--error);
+}
+
+.explain-bar-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #eef1f6;
+  overflow: hidden;
+}
+
+.explain-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.explain-bar-fill.up {
+  background: #1a8a52;
+}
+
+.explain-bar-fill.down {
+  background: var(--error);
+}
+
+@media (max-width: 560px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+}
