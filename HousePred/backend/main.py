@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -10,7 +9,7 @@ app = FastAPI(title="House Price Prediction API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173","https://jp-housepricepredictor.vercel.app"],
+    allow_origins=["http://localhost:5173"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -58,6 +57,7 @@ class PredictionResponse(BaseModel):
     predicted_price: float
     baseline_price: float  # price of a "typical" house (all fields at median)
     explanation: list[FeatureImpact]
+    summary: str  # short natural-language paragraph explaining the price
 
 
 QUALITY_LABELS = {
@@ -118,6 +118,52 @@ def format_value(field: str, value) -> str:
     return str(value)
 
 
+def format_dollars(value: float) -> str:
+    return f"${abs(value):,.0f}"
+
+
+def build_summary(
+    full_price: float, baseline_price: float, explanation: list[FeatureImpact]
+) -> str:
+    """Turn the predicted price + sorted feature impacts into a short,
+    human-readable paragraph explaining why the price came out the way it did."""
+    diff = full_price - baseline_price
+    direction = "above" if diff >= 0 else "below"
+
+    positives = [e for e in explanation if e.impact > 0]
+    negatives = [e for e in explanation if e.impact < 0]
+
+    lead = (
+        f"This house is predicted at {format_dollars(full_price)}, "
+        f"{format_dollars(diff)} {direction} a typical home "
+        f"({format_dollars(baseline_price)})."
+    )
+
+    parts = []
+    if positives:
+        top_pos = positives[:2]
+        joined = " and ".join(
+            f"{FIELD_DISPLAY_NAMES[p.feature]} (+{format_dollars(p.impact)})"
+            for p in top_pos
+        )
+        parts.append(f"The biggest boosts come from {joined}.")
+
+    if negatives:
+        top_neg = negatives[:2]
+        joined = " and ".join(
+            f"{FIELD_DISPLAY_NAMES[n.feature]} (-{format_dollars(n.impact)})"
+            for n in top_neg
+        )
+        parts.append(f"On the downside, {joined} pulled the price down.")
+
+    if not positives and not negatives:
+        parts.append(
+            "Every feature is close to typical, so the price sits near the baseline."
+        )
+
+    return " ".join([lead] + parts)
+
+
 @app.get("/")
 def health_check():
     return {"status": "ok", "message": "House Price Prediction API is running"}
@@ -162,10 +208,13 @@ def predict(data: HouseFeatures):
 
         explanation.sort(key=lambda x: abs(x.impact), reverse=True)
 
+        summary = build_summary(full_price, baseline_price, explanation)
+
         return PredictionResponse(
             predicted_price=round(full_price, 2),
             baseline_price=round(baseline_price, 2),
             explanation=explanation,
+            summary=summary,
         )
 
     except Exception as e:
