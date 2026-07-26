@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const API_URL = 'https://jphousepredictor.onrender.com/predict'
+const API_URL = 'http://localhost:8000/predict'
 
 const QUALITY_LEVELS = [
   { value: 10, label: 'Very Excellent' },
@@ -38,7 +38,7 @@ function money(n) {
 
 export default function App() {
   const [form, setForm] = useState(initialForm)
-  const [result, setResult] = useState(null) // { predicted_price, baseline_price, explanation }
+  const [result, setResult] = useState(null) // { predicted_price, baseline_price, explanation, summary }
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -156,6 +156,10 @@ export default function App() {
                 Typical house in this dataset: {money(result.baseline_price)} · ElasticNet regression model
               </span>
             </div>
+
+            {result.summary && (
+              <p className="summary-text">{result.summary}</p>
+            )}
 
             <div className="explain-box">
               <h2>Why this price?</h2>
