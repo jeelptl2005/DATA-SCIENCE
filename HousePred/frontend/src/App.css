@@ -311,3 +311,14 @@ button.secondary:hover {
     padding: 1.5rem;
   }
 }
+
+.summary-text {
+  margin: 1rem 0 0;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #f7f9fc;
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
