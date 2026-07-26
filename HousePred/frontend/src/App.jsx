@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const API_URL = 'http://localhost:8000/predict'
+const API_URL = 'https://jphousepredictor.onrender.com'
 
 const QUALITY_LEVELS = [
   { value: 10, label: 'Very Excellent' },
